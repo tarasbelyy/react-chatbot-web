@@ -1,0 +1,23 @@
+* {
+  font-family: sans-serif;
+  margin: 5px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+
+.auth-container {
+  width: 600px;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+}
+
+.field-container {
+  border: 1px solid lightgray;
+  border-radius: 5px;
+}
+
+@media (max-width: 767px) {
+    .auth-container {
+        width: 100%;
+    }
+}

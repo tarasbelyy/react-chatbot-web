@@ -1,0 +1,45 @@
+* {
+  font-family: sans-serif;
+  margin: 5px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+
+
+.app-container {
+  width: 800px;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+}
+
+.bots-container {
+  border: 1px solid lightgray;
+  border-radius: 5px;
+}
+
+.bot-container {
+  border: 1px solid lightgray;
+  border-radius: 5px;
+}
+
+
+.messages-container {
+  border: 1px solid lightgray;
+  border-radius: 5px;
+}
+
+.interaction-container {
+  border: 1px solid lightgray;
+  border-radius: 5px;
+}
+
+b {
+  margin: 0px;
+}
+
+
+@media (max-width: 767px) {
+    .app-container {
+        width: 100%;
+    }
+}
