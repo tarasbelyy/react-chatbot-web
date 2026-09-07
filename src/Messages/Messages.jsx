@@ -29,6 +29,7 @@ const Messages = () => {
     }, [user]);
 
     async function startBot(bot) {
+        tokensRef.current = 0;
         setBot(bot);
         const response = await fetch(`/api/v1/bots/${bot.id}/run/`,
             {method: "GET", headers: {
@@ -126,8 +127,8 @@ const Messages = () => {
           >
             <div hidden={option}>
               {messages[messages.length-1] && messages[messages.length-1]
-                .options?.map(optionName => (
-                  <button disabled={option} onClick={() => selectOption(optionName)}>
+                .options?.map((optionName, index) => (
+                  <button key={index} disabled={option} onClick={() => selectOption(optionName)}>
                     {optionName}
                   </button>
               ))}
