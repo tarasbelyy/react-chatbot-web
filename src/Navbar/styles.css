@@ -7,5 +7,9 @@
 .field-container {
   border: 1px solid lightgray;
   border-radius: 5px;
-  background-color: rgba(255, 228, 196, 0.25);
+  background-color: rgba(255, 228, 196, 0.35);
+}
+
+form {
+  margin: 0;
 }

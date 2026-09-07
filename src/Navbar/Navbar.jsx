@@ -10,7 +10,7 @@ const Navbar = () => {
     const [inputPasswordAgain, setInputPasswordAgain] = useState("");
     const [errorMessage, setErrorMessage] = useState(null);
 
-    async function handleSubmit (event) {
+    async function handleSubmit(event) {
         event.preventDefault();
         setErrorMessage(null);
         if (!isLogin) {
@@ -44,10 +44,10 @@ const Navbar = () => {
 
     if (user) {
         return (
-            <div className="auth-container">
-              <div>Добро пожаловать, {user.name}!</div>
-              <button onClick={logout}>Выйти</button>
-            </div>
+          <div className="auth-container">
+            <div>Добро пожаловать, {user.name}!</div>
+            <button onClick={logout}>Выйти</button>
+          </div>
         );
     }
 

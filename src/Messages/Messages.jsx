@@ -1,5 +1,5 @@
 import "./styles.css";
-import {useEffect, useState} from 'react';
+import {useEffect, useState, useRef} from 'react';
 import { useAuth } from '../AuthContext'
 
 const Messages = () => {
@@ -7,12 +7,12 @@ const Messages = () => {
     const EXIT_PHRASES = new Set(["завершить", "выход", "exit"]);
 
     const { user } = useAuth();
-
     const [bots, setBots] = useState([]);
     const [bot, setBot] = useState(null);
     const [messages, setMessages] = useState([]);
     const [option, setOption] = useState(null);
     const [inputValue, setInputValue] = useState(null);
+    const tokensRef = useRef(0);
 
     useEffect(() => {
         fetch("/api/v1/bots/")
@@ -21,72 +21,82 @@ const Messages = () => {
     }, []);
 
     useEffect(() => {
-      setMessages([]);
-      setBot(null);
-      setOption(null);
-      setInputValue(null);
+        setMessages([]);
+        setBot(null);
+        setOption(null);
+        setInputValue(null);
+        tokensRef.current = 0;
     }, [user]);
 
-    function startBot (bot) {
+    async function startBot(bot) {
         setBot(bot);
-        fetch(`/api/v1/bots/${bot.id}/run/`, {method: "GET", headers: {
-            "Authorization": user.token,
-            "Content-Type": "application/json" 
-        }})
-        .then(response => response.json())
-        .then(data => setMessages(
-          prevMessages => [...prevMessages, {
-            author: bot.name,
-            message: data.message,
-            options: data.next
-          }]));
+        const response = await fetch(`/api/v1/bots/${bot.id}/run/`,
+            {method: "GET", headers: {
+                "Authorization": user.token,
+                "Content-Type": "application/json" 
+        }});
+        const data = await response.json();
+        setMessages(
+            prevMessages => [...prevMessages, {
+                author: bot.name,
+                message: data.message,
+                options: data.next
+            }]);
+        tokensRef.current += data.tokens.completion;
     }
 
-    function selectOption (optionName) {
+    async function selectOption(optionName) {
         setOption(optionName);
         setInputValue("");
         if (EXIT_PHRASES.has(optionName)) {
-            setMessages(prevMessages => [...prevMessages, {
-              author: "Вы",
-              message: optionName
-            }])
-            const payload = {next: optionName, message: ""};
-            fetch(`/api/v1/bots/${bot.id}/run/`, {method: "POST", headers: {
-                "Authorization": user.token,
-                "Content-Type": "application/json" 
-            }, body: JSON.stringify(payload)})
-            .then(response => response.json())
-            .then(data => setMessages(
-              prevMessages => [...prevMessages, {
-                author: bot.name,
-                message: data.message,
-                options: data.next !== "-"? data.next : undefined
-              }]));
             setInputValue(null);
             setOption(null);
+            setMessages(
+                prevMessages => [...prevMessages, {
+                    author: "Вы",
+                    message: optionName
+            }]);
+            const payload = {next: optionName, message: ""};
+            const response = await fetch(`/api/v1/bots/${bot.id}/run/`,
+                {method: "POST", headers: {
+                    "Authorization": user.token,
+                    "Content-Type": "application/json" 
+            }, body: JSON.stringify(payload)});
+            const data = await response.json();
+            setMessages(
+                prevMessages => [...prevMessages, {
+                    author: bot.name,
+                    message: data.message,
+                    options: data.next !== "-"? data.next : undefined
+            }]);
+            tokensRef.current += data.tokens.completion;
             setBot(null);
         }
     }
 
-    function handleSubmit (event) {
+    async function handleSubmit(event) {
         event.preventDefault();
-        setMessages(prevMessages => [...prevMessages, {
-          author: "Вы",
-          message: inputValue
+        setMessages(
+            prevMessages => [...prevMessages, {
+                author: "Вы",
+                message: inputValue
         }])
-        const payload = {next: option, message: inputValue};
-        fetch(`/api/v1/bots/${bot.id}/run/`, {method: "POST", headers: {
-            "Authorization": user.token,
-            "Content-Type": "application/json" 
-        }, body: JSON.stringify(payload)})
-        .then(response => response.json())
-        .then(data => setMessages(
-          prevMessages => [...prevMessages, {
-            author: bot.name,
-            message: data.message,
-            options: data.next !== "-"? data.next : undefined
-          }]));
+        const prevInputValue = inputValue;
         setInputValue(null);
+        const payload = {next: option, message: prevInputValue};
+        const response = await fetch(`/api/v1/bots/${bot.id}/run/`,
+            {method: "POST", headers: {
+                "Authorization": user.token,
+                "Content-Type": "application/json" 
+        }, body: JSON.stringify(payload)});
+        const data = await response.json();
+        setMessages(
+            prevMessages => [...prevMessages, {
+                author: bot.name,
+                message: data.message,
+                options: data.next !== "-"? data.next : undefined
+        }]);
+        tokensRef.current += data.tokens.completion;
         setOption(null);
     }
 
@@ -111,7 +121,7 @@ const Messages = () => {
             ))}
           </div>
           <div 
-            hidden={!bot || (bot && !(option || inputValue ===null))} 
+            hidden={!bot || (!option && inputValue !==null)} 
             className="interaction-container"
           >
             <div hidden={option}>
@@ -127,6 +137,9 @@ const Messages = () => {
               <input type="text" onChange={(e) => setInputValue(e.target.value)}></input>
               <button type="submit">Отправить</button>
             </form>
+          </div>
+          <div hidden={bot || !tokensRef.current}>
+            Токены ответов чат-бота: {tokensRef.current}
           </div>
         </div>
     );
