@@ -109,7 +109,7 @@ const Messages = () => {
               <div key={chatbot.id} className="bot-container">
                 <span><b>{chatbot.name}</b></span>
                 <button hidden={bot} onClick={() => startBot(chatbot)}>Выбрать</button>
-                <p>{chatbot.description}</p>
+                <div>{chatbot.description}</div>
               </div>
             ))}
             <div hidden={!bot}>Выбран бот: <b>{bot?.name}</b></div>
@@ -139,7 +139,7 @@ const Messages = () => {
               <button type="submit">Отправить</button>
             </form>
           </div>
-          <div hidden={bot || !tokensRef.current}>
+          <div className="token-count" hidden={bot || !tokensRef.current}>
             Токены ответов чат-бота: {tokensRef.current}
           </div>
         </div>
