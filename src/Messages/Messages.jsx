@@ -92,7 +92,6 @@ const Messages = () => {
 
     return (
         <div hidden={!user} className="app-container">
-          <h2>ScAIChatBot</h2>
           <div className="bots-container">
             <div>Доступные боты:</div>
             {bots.map(chatbot => (
@@ -102,7 +101,7 @@ const Messages = () => {
                 <p>{chatbot.description}</p>
               </div>
             ))}
-            <div hidden={!bot}>Выбран бот: {bot?.name}</div>
+            <div hidden={!bot}>Выбран бот: <b>{bot?.name}</b></div>
           </div>
           <div hidden={!messages.length} className="messages-container">
             {messages.map((message, index) => (

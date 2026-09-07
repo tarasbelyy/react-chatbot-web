@@ -7,6 +7,7 @@ function App() {
   return (
     <div className="App">
       <AuthProvider>
+        <h2>ScAIChatBot</h2>
         <Navbar />
         <Messages />
       </AuthProvider>

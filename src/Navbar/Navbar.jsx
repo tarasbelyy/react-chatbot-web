@@ -44,7 +44,7 @@ const Navbar = () => {
 
     if (user) {
         return (
-            <div>
+            <div className="auth-container">
               <div>Добро пожаловать, {user.name}!</div>
               <button onClick={logout}>Выйти</button>
             </div>

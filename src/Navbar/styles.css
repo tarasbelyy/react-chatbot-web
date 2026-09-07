@@ -1,23 +1,11 @@
-* {
-  font-family: sans-serif;
-  margin: 5px;
-  padding: 0px;
-  box-sizing: border-box;
-}
-
 .auth-container {
-  width: 600px;
   border: 1px solid lightgray;
   border-radius: 5px;
+  background-color: rgba(255, 228, 196, 0.5);
 }
 
 .field-container {
   border: 1px solid lightgray;
   border-radius: 5px;
-}
-
-@media (max-width: 767px) {
-    .auth-container {
-        width: 100%;
-    }
+  background-color: rgba(255, 228, 196, 0.25);
 }
