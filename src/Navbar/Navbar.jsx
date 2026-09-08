@@ -1,4 +1,4 @@
-import "./styles.css";
+import "./Navbar.css";
 import { useState} from 'react';
 import { useAuth } from '../AuthContext'
 

@@ -10,6 +10,7 @@ function App() {
         <h2>ScAIChatBot</h2>
         <Navbar />
         <Messages />
+        <div className="space-container"></div>
       </AuthProvider>
     </div>
   );

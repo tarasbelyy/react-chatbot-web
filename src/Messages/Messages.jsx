@@ -1,4 +1,4 @@
-import "./styles.css";
+import "./Messages.css";
 import {useEffect, useState, useRef} from 'react';
 import { useAuth } from '../AuthContext'
 
@@ -109,7 +109,7 @@ const Messages = () => {
               <div key={chatbot.id} className="bot-container">
                 <span><b>{chatbot.name}</b></span>
                 <button hidden={bot} onClick={() => startBot(chatbot)}>Выбрать</button>
-                <div>{chatbot.description}</div>
+                <div className="bot-description">{chatbot.description}</div>
               </div>
             ))}
             <div hidden={!bot}>Выбран бот: <b>{bot?.name}</b></div>
@@ -135,7 +135,7 @@ const Messages = () => {
             </div>
             <div hidden={inputValue === null}>Выбор опции: {option}. Введите текст:</div>
             <form hidden={inputValue === null} onSubmit={handleSubmit}>
-              <input type="text" onChange={(e) => setInputValue(e.target.value)}></input>
+              <input type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)}></input>
               <button type="submit">Отправить</button>
             </form>
           </div>
