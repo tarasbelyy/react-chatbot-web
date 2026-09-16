@@ -13,6 +13,7 @@ const Messages = () => {
     const [option, setOption] = useState(null);
     const [inputValue, setInputValue] = useState(null);
     const tokensRef = useRef(0);
+    const divRef = useRef(null);
 
     useEffect(() => {
         fetch("/api/v1/bots/")
@@ -31,6 +32,7 @@ const Messages = () => {
     async function startBot(bot) {
         tokensRef.current = 0;
         setBot(bot);
+        setMessages([]);
         const response = await fetch(`/api/v1/bots/${bot.id}/run/`,
             {method: "GET", headers: {
                 "Authorization": user.token,
@@ -38,7 +40,7 @@ const Messages = () => {
         }});
         const data = await response.json();
         setMessages(
-            prevMessages => [...prevMessages, {
+            [{
                 author: bot.name,
                 message: data.message,
                 options: data.next
@@ -104,7 +106,7 @@ const Messages = () => {
     return (
         <div hidden={!user} className="app-container">
           <div className="bots-container">
-            <div>Доступные боты:</div>
+            <div ref={divRef} tabIndex={-1}>Доступные боты:</div>
             {bots.map(chatbot => (
               <div key={chatbot.id} className="bot-container">
                 <span><b>{chatbot.name}</b></span>
@@ -139,8 +141,9 @@ const Messages = () => {
               <button type="submit">Отправить</button>
             </form>
           </div>
-          <div className="token-count" hidden={bot || !tokensRef.current}>
-            Токены ответов чат-бота: {tokensRef.current}
+          <div className="after" hidden={bot || !tokensRef.current}>
+            <button onClick={() => divRef.current?.focus()}>Чат-боты</button>
+            <span>Токены ответов чат-бота: {tokensRef.current}</span>
           </div>
         </div>
     );
